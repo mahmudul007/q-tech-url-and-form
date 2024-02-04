@@ -4,30 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\FormField;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class FormFieldController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
+        if (!Gate::allows('form_create')) {
+            abort(403);
+        }
 
         $request->validate([
             'form_id' => 'required',
@@ -58,6 +44,9 @@ class FormFieldController extends Controller
      */
     public function edit($id)
     {
+        if (!Gate::allows('form_edit')) {
+            abort(403);
+        }
         $field = FormField::find($id);
         return view('frontend.formFields.edit', compact('field'));
     }
@@ -67,6 +56,9 @@ class FormFieldController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (!Gate::allows('form_edit')) {
+            abort(403);
+        }
 
         $request->validate([
 
@@ -89,6 +81,9 @@ class FormFieldController extends Controller
      */
     public function destroy($id)
     {
+        if (!Gate::allows('form_delete')) {
+            abort(403);
+        }
         $data = FormField::find($id);
         $data->delete();
         return redirect()->back()->with('success', 'Form Field deleted successfully.');

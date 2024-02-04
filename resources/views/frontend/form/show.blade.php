@@ -29,8 +29,9 @@
                                 <p> Category: <span class="text-success">{{ $form->category->category_name }}</span></p>
                             </div>
                             <div class="col text-end">
-
-                                <a class="btn btn-success" href="{{ $form->id }}/edit"> Edit form</a>
+                                @can('form_edit')
+                                    <a class="btn btn-success" href="{{ $form->id }}/edit"> Edit form</a>
+                                @endcan
                                 <a class="btn btn-danger" href="{{ route('dashboard') }}">Go back</a>
 
 
@@ -44,10 +45,12 @@
                         <!-- Button trigger modal -->
                         <div class="text-end mb-4">
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
-                                Add Options
-                            </button>
+                            @can('special_access')
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                    Add Options
+                                </button>
+                            @endcan
 
                             <!-- Modal -->
                             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -120,16 +123,18 @@
 
                                                 </p>
                                             </div>
-                                            <div class="col">
-                                                <div class="text-end m-2">
+                                            @can('special_access')
+                                                <div class="col">
+                                                    <div class="text-end m-2">
 
-                                                    <a href="{{ route('formfields.edit', $question) }}"
-                                                        class="btn btn-primary">Edit</a>
-                                                    <a onclick="return confirm('Are you sure to delete this?')"
-                                                        href="{{ route('formfield.destroy', $question->id) }}"
-                                                        class="btn btn-danger">Delete</a>
+                                                        <a href="{{ route('formfields.edit', $question) }}"
+                                                            class="btn btn-primary">Edit</a>
+                                                        <a onclick="return confirm('Are you sure to delete this?')"
+                                                            href="{{ route('formfield.destroy', $question->id) }}"
+                                                            class="btn btn-danger">Delete</a>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @endcan
                                         </div>
 
 
@@ -185,7 +190,7 @@
                                 <br>
                             @endforeach
                             <input type="submit" class="btn btn-success">
-                            <input type="text" name="form_id" value="{{$form->id}}" hidden>
+                            <input type="text" name="form_id" value="{{ $form->id }}" hidden>
                         </form>
 
                     </div>

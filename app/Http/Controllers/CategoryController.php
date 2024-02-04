@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
@@ -21,6 +22,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        if (!Gate::allows('category_create')) {
+            abort(403);
+        }
         return view('frontend.categories.create');
     }
 
@@ -29,6 +33,9 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Gate::allows('category_create')) {
+            abort(403);
+        }
 
         $request->validate([
             'category_name' => 'required | unique:categories,category_name',
@@ -51,7 +58,7 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         $category = Category::find($category->id);
-       
+
         return view('frontend.categories.show', compact('category'));
 
     }
@@ -61,6 +68,9 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
+        if (!Gate::allows('category_edit')) {
+            abort(403);
+        }
         $category = Category::find($category->id);
         return view('frontend.categories.edit', compact('category'));
     }
@@ -70,6 +80,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        if (!Gate::allows('category_edit')) {
+            abort(403);
+        }
         $request->validate([
             'category_name' => 'required',
             'description' => 'required',
@@ -89,6 +102,9 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        if (!Gate::allows('category_delete')) {
+            abort(403);
+        }
         $category = Category::find($category->id);
         $category->delete();
 

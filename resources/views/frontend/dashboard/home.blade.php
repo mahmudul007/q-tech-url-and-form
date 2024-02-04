@@ -17,14 +17,22 @@
                             <button type="button" class="btn btn-primary"> Categories </button>
                         </a>
 
+                        @can('form_create')
                         <a href="{{url('forms/create')}}">
                             <button type="button" class="btn btn-primary"> Form create </button>
                         </a>
+                        @endcan
                         <a href="{{url('forms')}}">
                             <button type="button" class="btn btn-primary"> All Forms </button>
                         </a>
+                        @can('special_access')
+                        <a href="{{route('submissions.index')}}">
+                            <button type="button" class="btn btn-primary"> All submitted form </button>
+                        </a>
+                        @endcan
 
                         <hr>
+                        
 
                         <a href="/url">
                             <button type="button" class="btn btn-primary"> Url create </button>

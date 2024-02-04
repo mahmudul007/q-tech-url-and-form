@@ -21,4 +21,12 @@ class Form extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    public function formOwner()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    public function FormFieldSubmissions()
+    {
+        return $this->hasMany(FormField::class, 'form_id', 'id');
+    }
 }

@@ -5,9 +5,9 @@
         <div class="row justify-content-center">
             <h3>All your forms here, you can add question when you enter it</h3>
             <div class="text-end">
-                <a class="btn btn-danger" href="{{route('dashboard')}}">Go back</a>
+                <a class="btn btn-danger" href="{{ route('dashboard') }}">Go back</a>
             </div>
-          
+
             <hr class="text-warning">
             <table class="table">
                 <thead>
@@ -28,12 +28,16 @@
                             <td>{{ $item->category->category_name }}</td>
                             <td>
                                 <a href="{{ route('forms.show', $item->id) }}" class="btn btn-primary">View</a>
-                                <a href="{{ route('forms.edit', $item->id) }}" class="btn btn-warning">Edit</a>
-                                <form action="{{ route('forms.destroy', $item->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
+                                @can('form_edit')
+                                    <a href="{{ route('forms.edit', $item->id) }}" class="btn btn-warning">Edit</a>
+                                @endcan
+                                @can('form_delete')
+                                    <form action="{{ route('forms.destroy', $item->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach

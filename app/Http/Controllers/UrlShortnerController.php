@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\UrlShortner;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 class UrlShortnerController extends Controller
@@ -13,6 +16,10 @@ class UrlShortnerController extends Controller
      */
     public function index()
     {
+        if (!Gate::allows('url_access')) {
+            abort(403);
+        }
+
         $urls = UrlShortner::where('user_id', auth()->user()->id)->get();
         return view('frontend.url.index', compact('urls'));
     }
@@ -22,6 +29,10 @@ class UrlShortnerController extends Controller
      */
     public function create()
     {
+        if (!Gate::allows('url_access')) {
+            abort(403);
+        }
+
         return view('frontend.url.create');
     }
 
@@ -30,7 +41,9 @@ class UrlShortnerController extends Controller
      */
     public function store(Request $request)
     {
-
+        if (!Gate::allows('url_access')) {
+            abort(403);
+        }
         $request->validate([
             'main_url' => 'required',
 
@@ -42,10 +55,12 @@ class UrlShortnerController extends Controller
         $urlShortner->save();
         return redirect()->route('url.index');
 
-
     }
     public function generateShortUrl()
     {
+        if (!Gate::allows('url_access')) {
+            abort(403);
+        }
         $shortUrl = Str::random(5);
         if (UrlShortner::where('short_url', $shortUrl)->exists()) {
             $this->generateShortUrl();
@@ -54,8 +69,9 @@ class UrlShortnerController extends Controller
     }
     public function hits(Request $request)
     {
-       
-
+        if (!Gate::allows('url_access')) {
+            abort(403);
+        }
         $urlShortner = UrlShortner::where('short_url', $request->short_url)->first();
         $urlShortner->hits = $urlShortner->hits + 1;
         $urlShortner->save();
@@ -67,6 +83,9 @@ class UrlShortnerController extends Controller
      */
     public function show(UrlShortner $urlShortner)
     {
+        if (!Gate::allows('url_access')) {
+            abort(403);
+        }
         $shortUrl = UrlShortner::find($urlShortner->id);
         return view('frontend.url.show', compact('shortUrl'));
 
@@ -77,7 +96,10 @@ class UrlShortnerController extends Controller
      */
     public function edit($id)
     {
-  
+        if (!Gate::allows('url_access')) {
+            abort(403);
+        }
+
         $shortUrl = UrlShortner::find($id);
         return view('frontend.url.edit', compact('shortUrl'));
 
@@ -86,9 +108,12 @@ class UrlShortnerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
-       
+        if (!Gate::allows('url_access')) {
+            abort(403);
+        }
+
         $request->validate([
             'main_url' => 'required|url',
         ]);
@@ -104,7 +129,10 @@ class UrlShortnerController extends Controller
      */
     public function destroy($id)
     {
-        
+        if (!Gate::allows('url_access')) {
+            abort(403);
+        }
+
         $shortUrl = UrlShortner::find($id);
         $shortUrl->delete();
         return redirect()->route('url.index');

@@ -58,15 +58,18 @@
 
                             <div class="form-group">
                                 <hr>
+                                @if ($field->field_type !== 'text')
+                                    @foreach ($options as $key => $item)
+                                        <label for="url">Options &nbsp;{{ $key + 1 }} </label>
 
-                                @foreach (  $options as $key=>$item )
-                                <label for="url">Options &nbsp;{{ $key+1}} </label>
+                                        <input type="text" id="label" name="options[]" class="form-control"
+                                            placeholder="Enter label" value="{{ $item }}">
+                                        <span class="text-danger">{{ $errors->first('main_url') }}</span>
+                                    @endforeach
+                                @endif
 
-                                <input type="text" id="label" name="options[]" class="form-control"
-                                    placeholder="Enter label" value="{{ $item }}">
-                                <span class="text-danger">{{ $errors->first('main_url') }}</span>
-                                @endforeach
-                               
+
+
                             </div>
 
 

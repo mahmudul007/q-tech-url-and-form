@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Submission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class SubmissionController extends Controller
 {
@@ -12,22 +14,41 @@ class SubmissionController extends Controller
      */
     public function index()
     {
-        //
+        if (!Gate::allows('submission_access')) {
+            abort(403);
+        }
+        $user = Auth::user();
+
+        $submissions = Submission::with([
+            'form' => function ($query) use ($user) {
+                $query->with('formOwner')->where('user_id', $user->id);
+            },
+
+        ])->get();
+
+        return view('frontend.submissions.index', compact('submissions'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show($id)
     {
-        //
+        if (!Gate::allows('special_access')) {
+            abort(403);
+        }
+        $user = Auth::user();
+        $submission = Submission::find($id)->with([
+            'form' => function ($query) use ($user) {
+                $query->with('formOwner')->where('user_id', $user->id);
+            },
+        ])->find($id);
+
+        return view('frontend.submissions.show', compact('submission'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        if (!Gate::allows('submission_view')) {
+            abort(403);
+        }
 
         $request->validate([
             'form_id' => 'required',
@@ -43,35 +64,14 @@ class SubmissionController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Submission $submission)
+    public function destroy($id)
     {
-        //
+        if (!Gate::allows('submission_delete')) {
+            abort(403);
+        }
+        $submission = Submission::find($id);
+        $submission->delete();
+        return redirect()->back()->with('success', 'Submission deleted successfully.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Submission $submission)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Submission $submission)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Submission $submission)
-    {
-        //
-    }
 }

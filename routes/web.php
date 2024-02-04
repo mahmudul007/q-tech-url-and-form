@@ -4,8 +4,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\FormFieldController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\UrlShortnerController;
 use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\UrlShortnerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,7 +29,11 @@ Route::get('/urlxx/{short_url}', [UrlShortnerController::class, 'hits'])->name('
 Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 Route::resource('/categories', CategoryController::class);
 Route::resource('/forms', FormController::class);
+
 Route::resource('/formfields', FormFieldController::class);
 Route::resource('/submissions', SubmissionController::class);
+Route::resource('/submissions', SubmissionController::class);
+Route::group(['middleware' => 'admin'], function () {
 
-Route::get('/form/{id}', [FormFieldController::class, 'destroy'])->name('formfield.destroy');
+    Route::get('/form/{id}', [FormFieldController::class, 'destroy'])->name('formfield.destroy');
+});

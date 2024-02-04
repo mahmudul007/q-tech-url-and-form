@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Form;
 use App\Models\FormField;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class FormController extends Controller
 {
@@ -23,6 +24,9 @@ class FormController extends Controller
      */
     public function create()
     {
+        if (!Gate::allows('form_create')) {
+            abort(403);
+        }
         $categories = Category::all();
 
         return view('frontend.form.create', compact('categories'));
@@ -33,6 +37,9 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Gate::allows('form_create')) {
+            abort(403);
+        }
 
         $request->validate([
             'title' => 'required ',
@@ -67,6 +74,9 @@ class FormController extends Controller
      */
     public function edit(Form $form)
     {
+        if (!Gate::allows('form_edit')) {
+            abort(403);
+        }
         $form = Form::find($form->id);
         $categories = Category::all();
         return view('frontend.form.edit', compact('form', 'categories'));
@@ -77,6 +87,10 @@ class FormController extends Controller
      */
     public function update(Request $request, Form $form)
     {
+        if (!Gate::allows('form_edit')) {
+            abort(403);
+        }
+
         $request->validate([
             'title' => 'required ',
             'description' => 'required',
@@ -90,7 +104,6 @@ class FormController extends Controller
 
         $form->save();
         $questions = FormField::where('form_id', $form->id)->get();
-        
 
         return redirect()->route('forms.show', $form->id)->with('form', 'questions')
             ->with('success', 'Form updated successfully.');
@@ -99,8 +112,16 @@ class FormController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Form $form)
+    public function destroy($id)
     {
-        //
+        if (!Gate::allows('form_delete')) {
+            abort(403);
+        }
+
+        $form = Form::find($id);
+        $form->delete();
+        return redirect()->route('frontend.forms.index')
+            ->with('success', 'Form deleted successfully.');
     }
+
 }

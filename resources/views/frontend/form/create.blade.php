@@ -7,9 +7,11 @@
             <div class="col-md-8">
                 <div class="text-end">
                     <!-- Button trigger modal -->
+                    @can('category_create')
                     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Add new category
                     </button>
+                    @endcan
 
                     <!-- Modal -->
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"

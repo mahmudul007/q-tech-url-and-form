@@ -16,12 +16,12 @@ class Submission extends Model
         'submission_data',
 
     ];
-    public function user()
+    public function SubmissionUser()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class , 'user_id' , 'id');
     }
     public function form()
     {
-        return $this->belongsTo(Form::class);
+        return $this->belongsTo(Form::class , 'form_id' , 'id');
     }
 }

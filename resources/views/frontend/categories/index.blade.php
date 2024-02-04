@@ -7,9 +7,11 @@
         <div class="row justify-content-center">
             <div class="text-end">
                 <!-- Button trigger modal -->
+                @can ('category_create')
                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     Add new category
                 </button>
+                @endcan
 
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -17,9 +19,11 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
+                              
                                 <h5 class="modal-title" id="exampleModalLabel">Add category</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
+                              
                             </div>
                             <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
@@ -68,15 +72,19 @@
                                 <a href="{{ route('categories.show', $item->id) }}">
                                     <button type="button" class="btn btn-primary">View</button>
                                 </a>
+                                @can('category_edit')
                                 <a href="{{ route('categories.edit', $item->id) }}">
                                     <button type="button" class="btn btn-primary">Edit</button>
                                 </a>
+                                @endcan
+                                @can('category_delete')
                                 <form action="{{ route('categories.destroy', $item->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger"
                                         onclick="return confirm('Are you sure to delete this?')">Delete</button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach
